@@ -1,0 +1,21 @@
+﻿# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Docker
+.docker/
+
+# Secrets
+.env
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# Dados/Cache
+data/
+*.log

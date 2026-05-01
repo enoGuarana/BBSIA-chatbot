@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bbsia_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bbsia
+      POSTGRES_USER: bbsia_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-troque_esta_senha_em_producao}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=pt_BR.UTF-8"
+      TZ: America/Sao_Paulo
+    ports:
+      - "127.0.0.1:5440:5432"    # exposto apenas no loopback local
+    volumes:
+      - bbsia_pgdata:/var/lib/postgresql/data
+      - ./bbsia_metadata.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bbsia_user -d bbsia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    shm_size: "256mb"
+
+  # Adminer: interface web leve para inspecionar o banco (opcional)
+  adminer:
+    image: adminer:4-standalone
+    container_name: bbsia_adminer
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"    # acesse em http://localhost:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools    # sobe apenas com: docker compose --profile tools up
+
+volumes:
+  bbsia_pgdata:
+    driver: local
