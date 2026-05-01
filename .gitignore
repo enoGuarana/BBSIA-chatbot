@@ -1,21 +1,28 @@
 ﻿# Python
 __pycache__/
-*.pyc
-*.pyo
-.venv/
+*.py[cod]
+*.so
 venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Ambiente
+.env
+!.env.example
 
 # Docker
 .docker/
 
-# Secrets
-.env
-!.env.example
-
-# IDE
+# IDE / OS
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
 
-# Dados/Cache
+# Dados / Logs / Cache
 data/
 *.log
+*.faiss
+*.db
